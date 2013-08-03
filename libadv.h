@@ -2,6 +2,7 @@
 #include <math.h>
 double Lx,dt,dx;
 double dx2;
+double ddxx;
 char FOLDER[256];
 //#define FOLDER "./data/0"
 #ifndef Nx
