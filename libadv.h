@@ -1,8 +1,7 @@
 #include <limits.h>
 #include <math.h>
-double Lx,dt,dx;
-double dx2;
-double ddxx;
+double Lx,dt,dx,dx2;
+double ddxx,ddxx2;
 char FOLDER[256];
 //#define FOLDER "./data/0"
 #ifndef Nx
@@ -40,21 +39,21 @@ char FOLDER[256];
 #endif
 
 //Positive advection UPW
-#define PUPW(u,p) (-u[I3(p)]+6*u[I1(p)]-3*u[p]-2*u[I2(p)])/(6*dx)
+#define PUPW(u,LL,L,C,R,RR) (-u[RR]+6*u[R]-3*u[C]-2*u[L])*ddxx/(6.0)
 //Negative advection UPW
-#define NUPW(u,p) (2*u[I1(p)]+3*u[p]-6*u[I2(p)]+u[I4(p)])/(6*dx)
-#define UPW(c,a,p) c*(c < 0 ? PUPW(a,p) : NUPW(a,p))
+#define NUPW(u,LL,L,C,R,RR) (2*u[R]+3*u[C]-6*u[L]+u[LL])*ddxx/(6.0)
+#define UPW(c,a,LL,L,C,R,RR) (c < 0 ? PUPW(a,LL,L,C,R,RR) : NUPW(a,LL,L,C,R,RR))
 
 //Positive advection Quick
-#define PQUICK(u,p) (-3*u[i]+7*u[I1(p)]-3*u[I2(p)]-u[I3(p)])/(8*dx)
+#define PQUICK(u,LL,L,C,R,RR) (-3*u[C]+7*u[R]-3*u[L]-u[RR])*ddxx*0.125
 //Negative advection Quick
-#define NQUICK(u,p) (3*u[p]+3*u[I1(p)]-7*u[I2(p)]+u[I4(p)])/(8*dx)
-#define QUICK(c,a,p) c*( c < 0 ? PQUICK(a,p) : NQUICK(a,p))
+#define NQUICK(u,LL,L,C,R,RR) (3*u[C]+3*u[R]-7*u[L]+u[LL])*ddxx*0.125
+#define QUICK(c,a,LL,L,C,R,RR) ( c < 0 ? PQUICK(a,LL,L,C,R,RR) : NQUICK(a,LL,L,C,R,RR))
 
 
-#define DIFFU(a,p) (a[I1(p)]-2*a[p]+a[I2(p)])/(dx*dx)
-#define DIFFE(a,p) (a[I1(p)]-a[I2(p)])/(2*dx)
-#define EULER(a,b,c,p) b[p] = a[p]+dt*c
+#define DIFFU(a,L,C,R) (a[L]-2*a[C]+a[R])*ddxx2
+#define DIFFE(a,L,C,R) (a[L]-a[R])*ddxx*0.5
+#define EULER(a,b,TERM,p) b[p] = a[p]+dt*TERM
 
 #define ABS(s) ((s) >0 ? (s) : -1*(s))
 #define TWICE(s) (s*s)

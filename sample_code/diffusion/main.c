@@ -6,7 +6,7 @@
 
 #define N 500
 #define DT 70000
-#define TD (DT/10)
+#define TD (DT*10)
 #define TTD 1
 #include "../../libadv.h"
 double Du;
@@ -23,6 +23,7 @@ int main(int argc, char **argv){
   InitValue(u);  
   for( i = 0; i <= TTD; i++){
     OutPut1(i,u);
+    printf("L1 = %.15lf\n",L1(u));
     for( j = 0; j < TD/2; j++){
       Calc(u,un);
       Calc(un,u);
