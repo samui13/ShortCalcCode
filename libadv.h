@@ -225,3 +225,36 @@ void freematrix(double *m){
   int i;
   free(m);
 }
+
+void InitialLUx(double D,double *cM,double *dM,double *lM);
+void LUx(double *uh,double *cM,double *dM,double *lM);
+
+void InitialLUx(double D,double *cM,double *dM,double *lM){
+  int i;
+  double R = D*dt/(2*dx*dx);
+  dM[0] = 1+2*R;
+  cM[0] = -2*R;
+
+  lM[0] = -R/dM[0];
+  for(i = 1;i < Nx;i++){
+    cM[i] = -R;
+    lM[i] = -R/dM[i-1];
+    dM[i] = (1+2*R)-lM[i]*cM[i-1];
+  }
+  lM[Nx] = -2*R/dM[Nx-1];
+  dM[Nx] = 1+2*R-lM[Nx]*cM[Nx-1];
+}
+
+void LUx(double *uh,double *cM,double *dM,double *lM){
+  int i;
+  double z[Nx+1];
+  z[0] = uh[0];
+  for (i = 1; i<=Nx; i++){
+    z[i] = uh[i]-lM[i]*z[i-1];
+  }
+  uh[Nx] = z[Nx]/dM[Nx];
+  for(i = 1; i <= Nx;i++){
+    uh[Nx-i] = (z[Nx-i]-cM[Nx-i]*uh[Nx-i+1])/dM[Nx-i];
+  }
+}
+
