@@ -61,7 +61,7 @@ char FOLDER[256];
 #define RSEED (unsigned int)1354682563
 #define RDOUBLE (2.0*rand()/(RAND_MAX+1.0)-1.0)
 #define EPS 1000000
-double L1(double u[N+1]){
+double L1(double *u){
   int i;
   double norm = 0;
   REP(i,1,N){
@@ -70,7 +70,7 @@ double L1(double u[N+1]){
   return norm;
 }
 
-double epsL1(double u1[N+1],double u2[N+1]){
+double epsL1(double *u1,double *u2){
   double eps = 0;
   int i;
   FOR(i,N){
@@ -78,7 +78,7 @@ double epsL1(double u1[N+1],double u2[N+1]){
   }
   return eps;
 }
-double epsL2(double u1[N+1],double u2[N+1]){
+double epsL2(double *u1,double *u2){
   double eps = 0;
   int i;
   FOR(i,N){
@@ -87,14 +87,14 @@ double epsL2(double u1[N+1],double u2[N+1]){
   return sqrt(eps);
 }
 
-void cp1(double u[N+1],double uo[N+1]){
+void cp1(double *u,double *uo){
   int i;
   FOR(i,N){
     uo[i] = u[i];
   }
 }
-double Liapun3L1(double u[Nx+1],double v[Nx+1],double w[Nx+1],
-	       double u1[Nx+1],double v1[Nx+1],double w1[Nx+1],double z0){
+double Liapun3L1(double *u,double *v,double *w,
+	       double *u1,double *v1,double *w1,double z0){
   double zn;
   int i;
   zn = epsL1(u,u1)+epsL1(v,v1)+epsL1(w,w1);
@@ -105,8 +105,8 @@ double Liapun3L1(double u[Nx+1],double v[Nx+1],double w[Nx+1],
   }
   return zn;
 }
-double Liapun1L1(double u[Nx+1],double v[Nx+1],double w[Nx+1],
-	       double u1[Nx+1],double v1[Nx+1],double w1[Nx+1],double z0){
+double Liapun1L1(double *u,double *v,double *w,
+	       double *u1,double *v1,double *w1,double z0){
   double zn;
   int i;
   zn = epsL1(w,w1);
@@ -118,8 +118,8 @@ double Liapun1L1(double u[Nx+1],double v[Nx+1],double w[Nx+1],
   return zn;
 }
 
-double Liapun1L2(double u[Nx+1],double v[Nx+1],double w[Nx+1],
-	       double u1[Nx+1],double v1[Nx+1],double w1[Nx+1],double z0){
+double Liapun1L2(double *u,double *v,double *w,
+	       double *u1,double *v1,double *w1,double z0){
   double zn;
   int i;
   zn = fabs(epsL2(u,u1));
@@ -131,7 +131,7 @@ double Liapun1L2(double u[Nx+1],double v[Nx+1],double w[Nx+1],
   return zn;
 }
 
-void cp3(double u[N+1],double v[N+1],double w[N+1],double uo[N+1],double vo[N+1],double wo[N+1]){
+void cp3(double *u,double *v,double *w,double *uo,double *vo,double *wo){
   int i;
   FOR(i,N){
     uo[i] = u[i];
@@ -139,7 +139,8 @@ void cp3(double u[N+1],double v[N+1],double w[N+1],double uo[N+1],double vo[N+1]
     wo[i] = w[i];
   }
 }
-void OutPut1(int t,double u[N+1]){
+
+void OutPut1(int t,double *u){
   char path[256];
   FILE *fp;
   int i,j;
@@ -157,7 +158,7 @@ void OutPut1(int t,double u[N+1]){
   printf("t = %f\t Output %s\n",dt*t*TD,path);
 }
 
-void OutPut2(int t,double u[N+1],double v[N+1]){
+void OutPut2(int t,double *u,double *v){
   char path[256];
   FILE *fp;
   int i,j;
@@ -177,7 +178,7 @@ void OutPut2(int t,double u[N+1],double v[N+1]){
 }
 
 
-void OutPut3(int t,double u[N+1],double v[N+1],double w[N+1]){
+void OutPut3(int t,double *u,double *v,double *w){
   char path[256];
   FILE *fp;
   int i,j;
@@ -212,4 +213,15 @@ void END(){
   FSPRT(fp,__TIME__);
   FSPRT(fp,"\n");
   fclose(fp);
+}
+
+double* mallmatrix(){
+  int i;
+  double *matrix;
+  matrix = (double *)malloc(sizeof(double *)*(N+1));
+  return matrix;
+}
+void freematrix(double *m){
+  int i;
+  free(m);
 }
