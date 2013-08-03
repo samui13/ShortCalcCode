@@ -319,3 +319,11 @@ double** mallmatrix(){
   }
   return matrix;
 }
+
+void freematrix(double **matrix){
+  int i,j;
+  FOR(j,Ny){
+    free(matrix[j]);
+  }
+  free(matrix);
+}
