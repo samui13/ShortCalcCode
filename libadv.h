@@ -60,6 +60,7 @@ char FOLDER[256];
 #define RSEED (unsigned int)1354682563
 #define RDOUBLE (2.0*rand()/(RAND_MAX+1.0)-1.0)
 #define EPS 1000000
+
 double L1(double *u){
   int i;
   double norm = 0;
