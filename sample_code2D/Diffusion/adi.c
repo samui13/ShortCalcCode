@@ -17,6 +17,9 @@ void InitialPara();
 void OutPara();
 double Du;
 
+double c_ux[Nx+1],d_ux[Nx+1],l_ux[Nx+1];
+double c_uy[Ny+1],d_uy[Ny+1],l_uy[Ny+1];
+
 int main(int argc, char **argv){
   double **u,**un;
   int i,j;
@@ -25,13 +28,20 @@ int main(int argc, char **argv){
   
   InitialPara();
   InitValue(u);
+  
+  Initial_LUx(Du,c_ux,d_ux,l_ux);
+  Initial_LUy(Du,c_uy,d_uy,l_uy);
+
   OutPara();
   FOR(i,TTD){
     OutPut1(i,u);
     printf("L1 = %.15lf\n",L1(u));
     FOR(j , TD/2){
       Calc(u,un);
+      /*
+      Calc(u,un);
       Calc(un,u);
+      */
     }
   }
 }
@@ -62,7 +72,7 @@ void InitialPara(){
   dt = 1/(double)DT;
 
   Du = 0.01;
-  sprintf(FOLDER,"./data/0/");
+  sprintf(FOLDER,"./data/1/");
 }
 
 void OutPara(){
@@ -90,6 +100,8 @@ void OutPara(){
 void Calc(double **u,double **un){
   int i,i1,i2,i3,i4;
   int j,j1,j2,j3,j4;
+  double uhx[Nx+1],uhy[Ny+1];
+
   FOR(j,Ny){
     j1 = J1(j);
     j2 = J2(j);
@@ -100,7 +112,30 @@ void Calc(double **u,double **un){
       i2 = I2(i);
       i3 = I3(i);
       i4 = I4(i);
-      un[j][i] = u[j][i]+dt*(Du*(DIFFUX(u,i,j)+DIFFUY(u,i,j)));
+      uhx[i] = u[j][i]+dt*(0.5*Du*DIFFUX(u,i2,i,i1,j));
+    }
+    LUx(uhx,c_ux,d_ux,l_ux);
+    FOR(i,Nx){
+      u[j][i] = uhx[i];
+    }
+  }
+  
+  FOR(i,Nx){
+    i1 = I1(i);
+    i2 = I2(i);
+    i3 = I3(i);
+    i4 = I4(i);
+    FOR(j,Ny){
+      j1 = J1(j);
+      j2 = J2(j);
+      j3 = J3(j);
+      j4 = J4(j);
+      uhy[j] = u[j][i] + dt*(0.5*Du*DIFFUY(u,i,j2,j,j1));
+    }    
+
+    LUy(uhy,c_uy,d_uy,l_uy);
+    FOR(j,Ny){
+      u[j][i] = uhy[j];
     }
   }
   if(isnan(un[0][0])){

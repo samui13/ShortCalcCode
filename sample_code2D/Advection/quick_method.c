@@ -7,7 +7,7 @@
 #define Nx 50
 #define Ny 50
 #define DT 10000
-#define TD (DT)
+#define TD (DT*10)
 #define TTD 10
 #include "../../libadv2.h"
 
@@ -15,7 +15,7 @@ void Calc(double **u,double **un);
 void InitValue(double **u);
 void InitialPara();
 void OutPara();
-double Du;
+double c,d;
 
 int main(int argc, char **argv){
   double **u,**un;
@@ -61,8 +61,9 @@ void InitialPara(){
   ddyy2 = 1/dy2;
   dt = 1/(double)DT;
 
-  Du = 0.01;
-  sprintf(FOLDER,"./data/0/");
+  c = 0.01;
+  d = -0.01;
+  sprintf(FOLDER,"./data/1/");
 }
 
 void OutPara(){
@@ -74,7 +75,7 @@ void OutPara(){
     printf("Directory not found \n");
     exit(1);
   }
-  FSFPRT(fp,"Du = ",Du);
+  FSFPRT(fp,"c = ",c);
   FSFPRT(fp,"Lx = ",Lx);
   FSFPRT(fp,"Ly = ",Ly);
   FSFPRT(fp,"dx = ",dx);
@@ -100,7 +101,8 @@ void Calc(double **u,double **un){
       i2 = I2(i);
       i3 = I3(i);
       i4 = I4(i);
-      un[j][i] = u[j][i]+dt*(Du*(DIFFUX(u,i,j)+DIFFUY(u,i,j)));
+      un[j][i] = u[j][i]+dt*(c*QUICKX(-1*c,u,i4,i2,i,i1,i3,j)
+			     +d*QUICKY(-1*d,u,i,j4,j2,j,j1,j3));
     }
   }
   if(isnan(un[0][0])){

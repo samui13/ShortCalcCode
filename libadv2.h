@@ -57,30 +57,29 @@ char FOLDER[256];
 
 
 //Positive advection UPW
-#define PUPWX(u,p,q) (-u[q][I3(p)]+6*u[q][I1(p)]-3*u[q][p]-2*u[q][I2(p)])/(6*dx)
-//#define PUPWX(u,LL,L,C,R,RR,Q) (-u[Q][L]+6*u[Q][R]-3*u[Q][C]-2*u[Q][L])*ddxx/(6.0)
-#define PUPWY(u,p,q) (-u[J3(q)][p]+6*u[J1(q)][p]-3*u[q][p]-2*u[J2(q)][p])/(6*dy)
+#define PUPWX(u,LLx,Lx,Cx,Rx,RRx,Cy) (-u[Cy][RRx]+6*u[Cy][Rx]-3*u[Cy][Cx]-2*u[Cy][Lx])*ddxx/(6.0)
+#define PUPWY(u,Cx,LLy,Ly,Cy,Ry,RRy) (-u[RRy][Cx]+6*u[Ry][Cx]-3*u[Cy][Cx]-2*u[Ly][Cx])*ddyy/(6.0)
 //Negative advection UPW
-#define NUPWX(u,p,q) (2*u[q][I1(p)]+3*u[q][p]-6*u[q][I2(p)]+u[q][I4(p)])/(6*dx)
-#define NUPWY(u,p,q) (2*u[J1(q)][p]+3*u[q][p]-6*u[J2(q)][p]+u[J4(q)][p])/(6*dy)
-#define UPWX(c,a,p,q) c*(c < 0 ? PUPWX(a,p,q) : NUPWX(a,p,q))
-#define UPWY(c,a,p,q) c*(c < 0 ? PUPWY(a,p,q) : NUPWY(a,p,q))
+#define NUPWX(u,LLx,Lx,Cx,Rx,RRx,Cy) (2*u[Cy][Rx]+3*u[Cy][Cx]-6*u[Cy][Lx]+u[Cy][LLx])*ddxx/(6.0)
+#define NUPWY(u,Cx,LLy,Ly,Cy,Ry,RRy) (2*u[Ry][Cx]+3*u[Cy][Cx]-6*u[Ly][Cx]+u[LLy][Cx])*ddyy/(6.0)
+#define UPWX(VEL,a,LLx,Lx,Cx,Rx,RRx,Cy) (VEL < 0 ? PUPWX(a,LLx,Lx,Cx,Rx,RRx,Cy) : NUPWX(a,LLx,Lx,Cx,Rx,RRx,Cy))
+#define UPWY(VEL,a,Cx,LLy,Ly,Cy,Ry,RRy) (VEL < 0 ? PUPWY(a,Cx,LLy,Ly,Cy,Ry,RRy) : NUPWY(a,Cx,LLy,Ly,Cy,Ry,RRy))
 
 //Positive advection Quick
 //i,j(x,y)
-#define PQUICKX(u,p,q) (-3*u[q][p]+7*u[q][I1(p)]-3*u[q][I2(p)]-u[q][I3(p)])/(8*dx)
-#define PQUICKY(u,p,q) (-3*u[q][p]+7*u[J1(q)][p]-3*u[J2(q)][p]-u[J3(q)][p])/(8*dy)
+#define PQUICKX(u,LLx,Lx,Cx,Rx,RRx,Cy) (-3*u[Cy][Cx]+7*u[Cy][Rx]-3*u[Cy][Lx]-u[Cy][RRx])*0.125*ddxx
+#define PQUICKY(u,Cx,LLy,Ly,Cy,Ry,RRy) (-3*u[Cy][Cx]+7*u[Ry][Cx]-3*u[Ly][Cx]-u[RRy][Cx])*0.125*ddyy
 //Negative advection Quick
-#define NQUICKX(u,p,q) (3*u[q][p]+3*u[q][I1(p)]-7*u[q][I2(p)]+u[q][I4(p)])/(8*dx)
-#define NQUICKY(u,p,q) (3*u[q][p]+3*u[J1(q)][p]-7*u[J2(q)][p]+u[J4(q)][p])/(8*dy)
-#define QUICKX(c,a,p,q) c*( c < 0 ? PQUICKX(a,p,q) : NQUICKX(a,p,q))
-#define QUICKY(c,a,p,q) c*( c < 0 ? PQUICKY(a,p,q) : NQUICKY(a,p,q))
+#define NQUICKX(u,LLx,Lx,Cx,Rx,RRx,Cy) (3*u[Cy][Cx]+3*u[Cy][Rx]-7*u[Cy][Lx]+u[Cy][LLx])*0.125*ddxx
+#define NQUICKY(u,Cx,LLy,Ly,Cy,Ry,RRy) (3*u[Cy][Cx]+3*u[Ry][Cx]-7*u[Ly][Cx]+u[LLy][Cx])*0.125*ddyy
+#define QUICKX(VEL,a,LLx,Lx,Cx,Rx,RRx,Cy) ( VEL < 0 ? PQUICKX(a,LLx,Lx,Cx,Rx,RRx,Cy) : NQUICKX(a,LLx,Lx,Cx,Rx,RRx,Cy))
+#define QUICKY(VEL,a,Cx,LLy,Ly,Cy,Ry,RRy) ( VEL < 0 ? PQUICKY(a,Cx,LLy,Ly,Cy,Ry,RRy) : NQUICKY(a,Cx,LLy,Ly,Cy,Ry,RRy))
 
 
-#define DIFFUX(a,p,q) (a[q][I1(p)]-2*a[q][p]+a[q][I2(p)])/(dx*dx)
-#define DIFFUY(a,p,q) (a[J1(q)][p]-2*a[q][p]+a[J2(q)][p])/(dy*dy)
-#define DIFFEX(a,p,q) (a[q][I1(p)]-a[q][I2(p)])/(2*dx)
-#define DIFFEY(a,p,q) (a[J1(q)][p]-a[J2(q)][p])/(2*dy)
+#define DIFFUX(a,Lx,Cx,Rx,Cy) (a[Cy][Rx]-2*a[Cy][Cx]+a[Cy][Lx])*ddxx2
+#define DIFFUY(a,Cx,Ly,Cy,Ry) (a[Ry][Cx]-2*a[Cy][Cx]+a[Ly][Cx])*ddyy2
+#define DIFFEX(a,Lx,Cx,Rx,Cy) (a[Cy][Rx]-a[Cy][Lx])*ddxx*0.5
+#define DIFFEY(a,Cx,Ly,Cy,Ry) (a[Ry][Cx]-a[Ly][Cx])*ddxx*0.5
 //EULERは使わないほうがいい。
 #define EULER(a,b,c,p,q) b[q][p] = a[q][p]+dt*c
 
@@ -90,7 +89,24 @@ char FOLDER[256];
 #define RDOUBLE (2.0*rand()/(RAND_MAX+1.0)-1.0)
 #define EPS 1000000
 
-double L1(double u[Ny+1][Nx+1]){
+double L1(double **u);
+double epsL1(double **u1,double **u2);
+void cp1(double **u,double **uo);
+void cp2(double **u,double **v,double **uo,double **vo);
+void cp3(double **u,double **v,double **w,double **uo,double **vo,double **wo);
+void OutPut1(int t,double **u);
+void OutPut2(int t,double **u,double **v);
+void OutPut3(int t,double **u,double **v,double **w);
+void END();
+void LUx(double *uh,double *cM,double *dM,double *lM);
+void LUy(double *uh,double *cM,double *dM,double *lM);
+void Initial_LUx(double D,double *cM,double *dM,double *lM);
+void Initial_LUy(double D,double *cM,double *dM,double *lM);
+double** mallmatrix();
+void freematrix(double **matrix);
+
+
+double L1(double **u){
   int i,j;
   double norm = 0,S;
   //FOR2(i,j,Nx,Ny){
@@ -103,7 +119,7 @@ double L1(double u[Ny+1][Nx+1]){
   return norm;
 }
 
-double epsL1(double u1[Ny+1][Nx+1],double u2[Ny+1][Nx+1]){
+double epsL1(double **u1,double **u2){
   int i,j;
   double eps = 0,S;
   FOR(j,Ny){
@@ -114,7 +130,7 @@ double epsL1(double u1[Ny+1][Nx+1],double u2[Ny+1][Nx+1]){
   }
   return eps;
 }
-void cp1(double u[Ny+1][Nx+1],double uo[Ny+1][Nx+1]){
+void cp1(double **u,double **uo){
   int i,j;
   FOR(j,Ny){
     FOR(i,Nx){
@@ -123,7 +139,7 @@ void cp1(double u[Ny+1][Nx+1],double uo[Ny+1][Nx+1]){
   }
 }
 
-void cp2(double u[Ny+1][Nx+1],double v[Ny+1][Nx+1],double uo[Ny+1][Nx+1],double vo[Ny+1][Nx+1]){
+void cp2(double **u,double **v,double **uo,double **vo){
   int i,j;
   FOR(j,Ny){
     FOR(i,Nx){
@@ -133,7 +149,7 @@ void cp2(double u[Ny+1][Nx+1],double v[Ny+1][Nx+1],double uo[Ny+1][Nx+1],double 
   }
 }
 
-void cp3(double u[Ny+1][Nx+1],double v[Ny+1][Nx+1],double w[Ny+1][Nx+1],double uo[Ny+1][Nx+1],double vo[Ny+1][Nx+1],double wo[Ny+1][Nx+1]){
+void cp3(double **u,double **v,double **w,double **uo,double **vo,double **wo){
   int i,j;
   FOR(j,Ny){
     FOR(i,Nx){
@@ -166,7 +182,7 @@ void OutPut1(int t,double **u){
 }
 
 
-void OutPut2(int t,double u[Ny+1][Nx+1],double v[Ny+1][Nx+1]){
+void OutPut2(int t,double **u,double **v){
   char path[256];
   FILE *fp;
   int i,j;
@@ -190,7 +206,7 @@ void OutPut2(int t,double u[Ny+1][Nx+1],double v[Ny+1][Nx+1]){
 }
 
 
-void OutPut3(int t,double u[Ny+1][Nx+1],double v[Ny+1][Nx+1],double w[Ny+1][Nx+1]){
+void OutPut3(int t,double **u,double **v,double **w){
   char path[256];
   FILE *fp;
   int i,j;
