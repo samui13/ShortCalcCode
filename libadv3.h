@@ -1,10 +1,11 @@
 #include <limits.h>
 double Lx,Ly,Lz,dt,dx,dy,dz;
 double dx2,dy2,dz2;
+double ddxx,ddyy,ddzz;
+double ddxx2,ddyy2,ddzz2;
 char FOLDER[256];
 //#define FOLDER "./data/0"
 //[Nz+1][Ny+1][Nx+1]
-//UPW(i,j,k)
 #ifndef Nx
 #define Nx N
 #define Ny N
@@ -23,7 +24,6 @@ char FOLDER[256];
 #define FSPRT(p,s) fprintf(p,"%s",s)
 #define FSFPRT(p,s,f) fprintf(p,"%s%lf\n",s,f)
 #define FDPRT(p,s) fprintf(p,"%.15lf ",s)
-
 
 #ifndef __BOUNX__
 // Boundary 0 Condition

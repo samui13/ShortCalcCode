@@ -36,12 +36,8 @@ int main(int argc, char **argv){
   FOR(i,TTD){
     OutPut1(i,u);
     printf("L1 = %.15lf\n",L1(u));
-    FOR(j , TD/2){
+    FOR(j , TD){
       Calc(u,un);
-      /*
-      Calc(u,un);
-      Calc(un,u);
-      */
     }
   }
 }
