@@ -1,8 +1,9 @@
 #include <limits.h>
 double Lx,Ly,dt,dx,dy;
 double dx2,dy2;
+double ddxx,ddxx2;
+double ddyy,ddyy2;
 char FOLDER[256];
-//#define FOLDER "./data/0"
 
 #ifndef Nx
 #define Nx N
@@ -10,7 +11,6 @@ char FOLDER[256];
 #else
 #define N Nx
 #endif
-#define FOR2(i,j,e1,e2) for(j = 0; j <= e2;j++){for(i = 0; i <= e1; i++)
 #define FOR(i,e) for(i = 0; i <= e; i++)
 #define REP(i,s,e) for(i = s; i <= e; i++)
 
@@ -58,6 +58,7 @@ char FOLDER[256];
 
 //Positive advection UPW
 #define PUPWX(u,p,q) (-u[q][I3(p)]+6*u[q][I1(p)]-3*u[q][p]-2*u[q][I2(p)])/(6*dx)
+//#define PUPWX(u,LL,L,C,R,RR,Q) (-u[Q][L]+6*u[Q][R]-3*u[Q][C]-2*u[Q][L])*ddxx/(6.0)
 #define PUPWY(u,p,q) (-u[J3(q)][p]+6*u[J1(q)][p]-3*u[q][p]-2*u[J2(q)][p])/(6*dy)
 //Negative advection UPW
 #define NUPWX(u,p,q) (2*u[q][I1(p)]+3*u[q][p]-6*u[q][I2(p)]+u[q][I4(p)])/(6*dx)
@@ -142,7 +143,7 @@ void cp3(double u[Ny+1][Nx+1],double v[Ny+1][Nx+1],double w[Ny+1][Nx+1],double u
     }
   }
 }
-void Output1(int t,double **u){
+void OutPut1(int t,double **u){
   char path[256];
   FILE *fp;
   int i,j;
@@ -163,29 +164,6 @@ void Output1(int t,double **u){
   fclose(fp);
   printf("t = %f\t Output %s\n",dt*t*TD,path);
 }
-
-void OutPut1(int t,double u[Ny+1][Nx+1]){
-  char path[256];
-  FILE *fp;
-  int i,j;
-  sprintf(path,"%s/data%d.txt",FOLDER,t);
-  if((fp = fopen(path,"wt")) == NULL){
-    printf("Directory not found\n");
-    exit(1);
-  }
-  FOR(j,Ny){
-    FOR(i,Nx){
-      FDPRT(fp,dx*i);
-      FDPRT(fp,dy*j);
-      FDPRT(fp,u[j][i]);
-      FSPRT(fp,"\n");
-    }
-    FSPRT(fp,"\n");
-  }
-  fclose(fp);
-  printf("t = %f\t Output %s\n",dt*t*TD,path);
-}
-
 
 
 void OutPut2(int t,double u[Ny+1][Nx+1],double v[Ny+1][Nx+1]){
