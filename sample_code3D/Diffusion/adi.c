@@ -1,8 +1,6 @@
+// -*- coding:utf-8 -*-
 /*
-Mimura-Tujikawa. 3D
-u_t= Du*u''-b(uv')'+cu(1-u)
-v_t=Dv*v''+fu-gv
-Designed at 2013.5.13
+  Diffusion 3D
  */
 
 #include <stdio.h>
@@ -15,12 +13,10 @@ Designed at 2013.5.13
 #define Nz 40
 
 #define DT 8192
-//#define TD (DT/(DT))
 #define TD (DT)
 #define TTD INT_MAX
 
-#include "./libadv3.h"
-//#include "/home/ymnk/template/libadv3.h"
+#include "../../libadv3.h"
 double delta,alpha,beta;
 double Du,b,c,Dv,f,g;
 
@@ -118,7 +114,7 @@ void OutPara(){
   FSFPRT(fp,"dt = ",dt);
 
   FSPRT(fp,"Start Time:");
-  fprintf(fp,"%d",time(NULL));
+  //fprintf(fp,"%d",time(NULL));
   fclose(fp);
 }
 void InitialValue(double ***u,double ***v){

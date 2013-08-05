@@ -1,4 +1,6 @@
 #include <limits.h>
+#include <math.h>
+#include <time.h>
 double Lx,Ly,Lz,dt,dx,dy,dz;
 double dx2,dy2,dz2;
 double ddxx,ddyy,ddzz;
@@ -273,7 +275,7 @@ void END(){
   FSPRT(fp,__FILE__);
   FSPRT(fp,"\n");
   FSPRT(fp,"End Time:");
-  fprintf(fp,"%d",time(NULL));
+  fprintf(fp,"%d",(unsigned int)time(NULL));
   fclose(fp);
 }
 void LUx(double *uh,double *cM,double *dM,double *lM){
