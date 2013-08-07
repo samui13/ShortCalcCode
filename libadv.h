@@ -60,6 +60,26 @@ char FOLDER[256];
 #define RSEED (unsigned int)1354682563
 #define RDOUBLE (2.0*rand()/(RAND_MAX+1.0)-1.0)
 #define EPS 1000000
+double L1(double *u);
+double epsL1(double *u1,double *u2);
+double epsL2(double *u1,double *u2);
+void cp1(double *u,double *uo);
+double Liapun3L1(double *u,double *v,double *w,
+		 double *u1,double *v1,double *w1,double z0);
+double Liapun1L1(double *u,double *v,double *w,
+		   double *u1,double *v1,double *w1,double z0);
+double Liapun1L2(double *u,double *v,double *w,
+		   double *u1,double *v1,double *w1,double z0);
+void cp3(double *u,double *v,double *w,double *uo,double *vo,double *wo);
+void OutPut1(int t,double *u);
+void OutPut2(int t,double *u,double *v);
+void OutPut3(int t,double *u,double *v,double *w);
+void END();
+double* mallmatrix();
+void freematrix(double *m);
+void InitialLUx(double D,double *cM,double *dM,double *lM);
+void LUx(double *uh,double *cM,double *dM,double *lM);
+
 
 double L1(double *u){
   int i;
@@ -226,8 +246,6 @@ void freematrix(double *m){
   free(m);
 }
 
-void InitialLUx(double D,double *cM,double *dM,double *lM);
-void LUx(double *uh,double *cM,double *dM,double *lM);
 
 void InitialLUx(double D,double *cM,double *dM,double *lM){
   int i;
@@ -258,3 +276,13 @@ void LUx(double *uh,double *cM,double *dM,double *lM){
   }
 }
 
+void InitialValue_GaussDistribution(double *ma,double rho,double mu){
+  int i;
+  FOR(i,N){
+    ma[i] = 1/sqrt(2*M_PI*rho*rho)*exp(-(dx*i-mu)*(dx*i-mu)/(2*rho*rho));
+  }
+}
+void InitialValue_Discreate(double *ma){
+  int i;
+  
+}
