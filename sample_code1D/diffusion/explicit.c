@@ -1,8 +1,8 @@
+// -*- coding: utf-8 -*-
 #include <stdio.h>
 #include <stdlib.h>
 #include <math.h>
 #include <time.h>
-
 
 #define N 500
 #define DT 70000
