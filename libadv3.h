@@ -99,12 +99,12 @@ char FOLDER[256];
 #define QUICKY(c,a,p,q,r) c*( c < 0 ? PQUICKY(a,p,q,r) : NQUICKY(a,p,q,r))
 #define QUICKZ(c,a,p,q,r) c*( c < 0 ? PQUICKZ(a,p,q,r) : NQUICKZ(a,p,q,r))
 
-#define DIFFUX(a,p,q,r) (a[r][q][I1(p)]-2*a[r][q][p]+a[r][q][I2(p)])/(dx*dx)
-#define DIFFUY(a,p,q,r) (a[r][J1(q)][p]-2*a[r][q][p]+a[r][J2(q)][p])/(dy*dy)
-#define DIFFUZ(a,p,q,r) (a[K1(r)][q][p]-2*a[r][q][p]+a[K2(r)][q][p])/(dz*dz)
-#define DIFFEX(a,p,q,r) (a[r][q][I1(p)]-a[r][q][I2(p)])/(2*dx)
-#define DIFFEY(a,p,q,r) (a[r][J1(q)][p]-a[r][J2(q)][p])/(2*dy)
-#define DIFFEZ(a,p,q,r) (a[K1(r)][q][p]-a[K2(r)][q][p])/(2*dz)
+#define DIFFUX(a,Lx,Cx,Rx,Cy,Cz) (a[Cz][Cy][Lx]-2*a[Cz][Cy][Cx]+a[Cz][Cy][Rx])*(ddxx2)
+#define DIFFUY(a,Cx,Ly,Cy,Ry,Cz) (a[Cz][Ly][Cx]-2*a[Cz][Cy][Cx]+a[Cz][Ry][Cx])*(ddyy2)
+#define DIFFUZ(a,Cx,Cy,Lz,Cz,Rz) (a[Lz][Cy][Cx]-2*a[Cz][Cy][Cx]+a[Rz][Cy][Cx])*(ddzz2)
+#define DIFFEX(a,Lx,Cx,Rx,Cy,Cz) (a[Cz][Cy][Rx]-a[Cz][Cy][Lx])*0.5*ddxx
+#define DIFFEY(a,Cx,Ly,Cy,Ry,Cz) (a[Cz][Ry][Cx]-a[Cz][Ly][Cx])*0.5*ddyy
+#define DIFFEZ(a,Cx,Cy,Lz,Cz,Rz) (a[Rz][Cy][Cx]-a[Lz][Cy][Cx])*0.5*ddzz
 //EULERは使わないほうがいい。
 #define EULER(a,b,c,p,q,r) b[r][q][p] = a[r][q][p]+dt*c
 
