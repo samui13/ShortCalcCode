@@ -58,9 +58,10 @@ void InitialPara(){
   Dv = 1.0*pow(10.0,-5.0);
   a = 0.04;
   b = 0.10075;
+  printf("%lf,%lf\n",Du,Dv);
   dx = Lx/(double)N;
   dt = 1/(double)DT;
-  sprintf(FOLDER,"./data/1/");
+  sprintf(FOLDER,"./data/0/");
   dx2 = dx*dx;
   ddxx = 1/dx;
   ddxx2 = 1/dx2;
@@ -73,10 +74,13 @@ void InitValue(double *u,double *v){
     u[i] = 1.0;
     v[i] = 0.0;
   }
-  InitialValue_GaussDistribution(v,sqrt(0.002),Lx/2);
+  //InitialValue_GaussDistribution(v,sqrt(0.002),Lx/2);
+  InitialValue_Palse(v,0.0,0.35);
+  /*
   FOR(i,Nx){
     v[i]/=9.0;
   }
+  */
 
 }
 

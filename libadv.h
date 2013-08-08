@@ -282,6 +282,14 @@ void InitialValue_GaussDistribution(double *ma,double rho,double mu){
     ma[i] = 1/sqrt(2*M_PI*rho*rho)*exp(-(dx*i-mu)*(dx*i-mu)/(2*rho*rho));
   }
 }
+void InitialValue_Palse(double *ma,double rho,double mu){
+  int i;
+  FOR(i , N){
+    if(i*dx >= mu && i*dx <= Lx-mu){
+      ma[i] = 1.0;
+    }
+  }
+}
 void InitialValue_Discreate(double *ma){
   int i;
   
