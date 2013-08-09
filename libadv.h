@@ -65,19 +65,11 @@ double epsL1(double *u1,double *u2);
 double epsL2(double *u1,double *u2);
 void cp1(double *u,double *uo);
 double Liapun3L1(double *u,double *v,double *w,
-<<<<<<< HEAD
 		 double *u1,double *v1,double *w1,double z0);
-double Liapun1L1(double *u,double *v,double *w,
-		   double *u1,double *v1,double *w1,double z0);
-double Liapun1L2(double *u,double *v,double *w,
-		   double *u1,double *v1,double *w1,double z0);
-=======
-		   double *u1,double *v1,double *w1,double z0);
 double Liapun1L1(double *u,double *v,double *w,
 		 double *u1,double *v1,double *w1,double z0);
 double Liapun1L2(double *u,double *v,double *w,
 		 double *u1,double *v1,double *w1,double z0);
->>>>>>> working
 void cp3(double *u,double *v,double *w,double *uo,double *vo,double *wo);
 void OutPut1(int t,double *u);
 void OutPut2(int t,double *u,double *v);
@@ -254,10 +246,6 @@ void freematrix(double *m){
   free(m);
 }
 
-<<<<<<< HEAD
-
-=======
->>>>>>> working
 void InitialLUx(double D,double *cM,double *dM,double *lM){
   int i;
   double R = D*dt/(2*dx*dx);
