@@ -321,3 +321,14 @@ void freematrix(double **matrix){
   }
   free(matrix);
 }
+
+void InitialValue_GaussDistribution(double **ma,double rhoX,double muX,
+				    double rhoY,double muY){
+  int i,j;
+  FOR(j,Ny){
+    FOR(i,N){
+      ma[j][i] = 1/sqrt(2*M_PI*rhoX*rhoX)*1/sqrt(2*M_PI*rhoY*rhoY)*exp(-(dx*i-muX)*(dx*i-muX)/(2*rhoX*rhoX))*exp(-(j*dy-muY)*(j*dy-muY)/(2*rhoY*rhoY));
+    }
+  }
+}
+
