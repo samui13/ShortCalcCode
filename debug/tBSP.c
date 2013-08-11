@@ -29,16 +29,18 @@ int main(int argc,char **argv){
   sprintf(FOLDER,"./data/2/");
   FOR(i,N){
     u[i] = 0.0;
+    
     if(dx*i >= 0.4 && i*dx <= 0.6){
       u[i] = 1.0;
     }
+    
   }
   OutPut1(0,u);
   int j;
   double AlphaDu = Du*dt/(dx*dx);
   double B[(int)(N/2)+1],F[N+1],D[(int)N+1];
 
-  for(j = 0;j<=0;j++){
+  for(j = 0;j<=1;j++){
     B[0] = -(1+2*AlphaDu)/(-2*AlphaDu)*1;
     B[1] = -(1+2*AlphaDu)/(-1*AlphaDu)*B[0]-1;
     F[0] = u[0]/(-2*AlphaDu);
@@ -67,26 +69,10 @@ int main(int argc,char **argv){
     for(i = 1;i<=N/2;i++){
       un[N-i] = D[N-i+1]*un[N]+F[N-i+1];
     }
-    temp = u;
+    temp = u; 
     u = un;
     un = temp;
   }
   OutPut1(1,u);
-  /*
-
-  InitialLUx(Du,cMM,dMM,lMM);
-  FOR(i,N){
-    u[i] = 0.0;
-    if(dx*i >= 0.4 && i*dx <= 0.6){
-      u[i] = 1.0;
-    }
-    printf("%d %lf %lf %lf\n",i,cMM[i],dMM[i],lMM[i]);
-  }
-  OutPut1(0,u);
-  FOR(i,TD/4){
-    LUx(u,cMM,dMM,lMM);
-  }
-  OutPut1(1,u);
-  */
   return 0;
 }

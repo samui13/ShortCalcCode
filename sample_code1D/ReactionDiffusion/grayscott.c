@@ -40,11 +40,14 @@ int main(int argc, char **argv){
   cp1(u,uo);
   for( i = 0; i <= TTD; i++){
     OutPut2(i,u,v);
+    
     printf("L1 = %.15lf, epsL1 = %.15lf\n",L1(u),epsL1(u,uo));
+    cp1(u,uo);
     for( j = 0; j < TD/2; j++){
       Calc(u,v,un,vn);
       Calc(un,vn,u,v);
     }
+    
   }
   freematrix(u);
   freematrix(un);
@@ -53,15 +56,15 @@ int main(int argc, char **argv){
   return 0;
 }
 void InitialPara(){
-  Lx = 1.0;
+  Lx = 0.5;
   Du = 2.0*pow(10.0,-5.0);
   Dv = 1.0*pow(10.0,-5.0);
-  a = 0.04;
-  b = 0.10075;
+  a = 0.025;
+  b = 0.0542+a;
   printf("%lf,%lf\n",Du,Dv);
   dx = Lx/(double)N;
   dt = 1/(double)DT;
-  sprintf(FOLDER,"./data/0/");
+  sprintf(FOLDER,"./data/1/");
   dx2 = dx*dx;
   ddxx = 1/dx;
   ddxx2 = 1/dx2;
@@ -73,9 +76,12 @@ void InitValue(double *u,double *v){
   FOR(i,Nx){
     u[i] = 1.0;
     v[i] = 0.0;
+    if(i*dx >= Lx/2 + 0.15 && i*dx <= Lx/2+0.20){
+      v[i] = 1.0;
+    }
   }
   //InitialValue_GaussDistribution(v,sqrt(0.002),Lx/2);
-  InitialValue_Palse(v,0.0,0.35);
+  //InitialValue_Palse(v,0.0,Lx/2-0.001);
   /*
   FOR(i,Nx){
     v[i]/=9.0;
