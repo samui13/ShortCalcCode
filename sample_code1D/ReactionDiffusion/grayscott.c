@@ -11,8 +11,8 @@
 
 #define N 500
 #define DT 70000
-#define TD (DT*50)
-#define TTD 100
+#define TD (DT)
+#define TTD 18000
 //#define __BOUM__ 0
 #include "../../libadv.h"
 
