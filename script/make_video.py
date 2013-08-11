@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
-# Last-Updated : <2013/08/10 03:54:24 by samui>
+# Last-Updated : <2013/08/11 12:46:44 by ymnk>
 import sys,os
 
 # 1D plot
@@ -44,8 +44,10 @@ if __name__  == "__main__":
     gnuplot_file.close()
 
     os.system("cd {0}; gnuplot {1}".format(sys.argv[1],cmd_file))
- 
-    os.system("ffmpeg -r 15 -i {0}/data00%3d.png -vcodec mjpeg {1}".format(os.path.join(data_folder,"png"),movie_file))
+    print os.system("which mencoder")
+    #mencoder "mf://*.png" -mf fps=30 -ovc lavc -lavcopts
+    #vcodec=mpeg4:vpass=1 -o ./movie.avi
+    os.system("ffmpeg -r 30  -i {0}/data00%3d.png -vcodec mpeg4 {1}".format(os.path.join(data_folder,"png"),movie_file))
     os.system("rm -r {0}".format(os.path.join(data_folder,"png")))
     
     #os.system("rm {0}".format(cmd_file))
