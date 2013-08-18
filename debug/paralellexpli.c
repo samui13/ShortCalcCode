@@ -10,7 +10,7 @@
 
 #define N 500
 #define DT 70000
-#define TD (DT/10)
+#define TD (DT*10)
 #define TTD 10
 #include "../libadv.h"
 
@@ -32,18 +32,23 @@ int main(int argc, char **argv){
     OutPut1(i,u);
     printf("L1 = %.15lf\n",L1(u));
     for( j = 0; j < TD; j++){
-      //Calc(u,un,0,N);
-#pragma omp parallel sections num_threads(2)
+#ifndef _OPENMP
+      Calc(u,un,0,N);
+#else      
+#pragma omp parallel
+#pragma omp sections
       {
-    #pragma omp section
-    {
-      Calc(u,un,0,250);
-    }
 #pragma omp section
-    {
-      Calc(u,un,251,500);
-    }
- }
+	{
+	  Calc(u,un,0,250);
+	}
+#pragma omp section
+	{
+	  Calc(u,un,251,500);
+	}
+      }
+#endif
+      
       temp = un;
       un = u;
       u = temp;
