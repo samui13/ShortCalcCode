@@ -23,7 +23,7 @@ int main(int argc,char **argv){
   dMM = (double *)malloc(sizeof(double *)*(N+1));
   lMM = (double *)malloc(sizeof(double *)*(N+1));
   Lx = 1.0;
-  Du = 0.1;
+  Du = 0.01;
   dx = Lx/(double)N;
   dt = 1/(double)DT;
   sprintf(FOLDER,"./data/2/");
