@@ -75,29 +75,30 @@ char FOLDER[256];
 
 
 //Positive advection UPW
-#define PUPWX(u,p,q,r) (-u[r][q][I3(p)]+6*u[r][q][I1(p)]-3*u[r][q][p]-2*u[r][q][I2(p)])/(6*dx)
-#define PUPWY(u,p,q,r) (-u[r][J3(q)][p]+6*u[r][J1(q)][p]-3*u[r][q][p]-2*u[r][J2(q)][p])/(6*dy)
-#define PUPWZ(u,p,q,r) (-u[K3(r)][q][p]+6*u[K1(r)][q][p]-3*u[r][q][p]-2*u[K2(r)][q][p])/(6*dz)
+#define PUPWX(u,LLx,Lx,Cx,Rx,RRx,Cy,Cz) (-u[Cz][Cy][RRx]+6*u[Cz][Cy][Rx]-3*u[Cz][Cy][Cx]-2*u[Cz][Cy][Lx])*ddxx/(6.0)
+#define PUPWY(u,Cx,LLy,Ly,Cy,Ry,RRy,Cz) (-u[Cz][RRy][Cx]+6*u[Cz][Ry][Cx]-3*u[Cz][Cy][Cx]-2*u[Cz][Ly][Cx])*ddyy/(6.0)
+#define PUPWZ(u,Cx,Cy,LLz,Lz,Cz,Rz,RRz) (-u[RRz][Cy][Cx]+6*u[Rz][Cy][Cx]-3*u[Cz][Cy][Cx]-2*u[Lz][Cy][Cx])*ddzz/(6.0)
 //Negative advection UPW
-#define NUPWX(u,p,q,r) (2*u[r][q][I1(p)]+3*u[r][q][p]-6*u[r][q][I2(p)]+u[r][q][I4(p)])/(6*dx)
-#define NUPWY(u,p,q,r) (2*u[r][J1(q)][p]+3*u[r][q][p]-6*u[r][J2(q)][p]+u[r][J4(q)][p])/(6*dy)
-#define NUPWZ(u,p,q,r) (2*u[K1(r)][q][p]+3*u[r][q][p]-6*u[K2(r)][q][p]+u[K4(r)][q][p])/(6*dz)
-#define UPWX(c,a,p,q,r) c*(c < 0 ? PUPWX(a,p,q,r) : NUPWX(a,p,q,r))
-#define UPWY(c,a,p,q,r) c*(c < 0 ? PUPWY(a,p,q,r) : NUPWY(a,p,q,r))
-#define UPWZ(c,a,p,q,r) c*(c < 0 ? PUPWZ(a,p,q,r) : NUPWZ(a,p,q,r))
+#define NUPWX(u,LLx,Lx,Cx,Rx,RRx,Cy,Cz) (2*u[Cz][Cy][Rx]+3*u[Cz][Cy][Cx]-6*u[Cz][Cy][Lx]+u[Cz][Cy][LLx])*ddxx/(6.0)
+#define NUPWY(u,Cx,LLy,Ly,Cy,Ry,RRy,Cz) (2*u[Cz][Ry][Cx]+3*u[Cz][Cy][Cx]-6*u[Cz][Ly][Cx]+u[Cz][LLy][Cx])*ddyy/(6.0)
+#define NUPWZ(u,Cx,Cy,LLz,Lz,Cz,Rz,RRz) (2*u[Rz][Cy][Cx]+3*u[Cz][Cy][Cx]-6*u[Lz][Cy][Cz]+u[LLz][Cy][Cx])*ddzz/(6.0)
+#define UPWX(VELOCI,a,LLx,Lx,Cx,Rx,RRx,Cy,Cz) (VELOCI < 0 ? PUPWX(a,LLx,Lx,Cx,Rx,RRx,Cy,Cz) : NUPWX(a,LLx,Lx,Cx,Rx,RRx,Cy,Cz))
+#define UPWY(VELOCI,a,Cx,LLy,Ly,Cy,Ry,RRy,Cz) (VELOCI < 0 ? PUPWY(a,Cx,LLy,Ly,Cy,Ry,RRy,Cz) : NUPWY(a,Cx,LLy,Ly,Cy,Ry,RRy,Cz))
+#define UPWZ(VELOCI,a,Cx,Cy,LLz,Lz,Cz,Rz,RRz) (VELOCI < 0 ? PUPWZ(a,Cx,Cy,LLz,Lz,Cz,Rz,RRz) : NUPWZ(a,Cx,Cy,LLz,Lz,Cz,Rz,RRz))
 
 //Positive advection Quick
 //i,j(x,y)
-#define PQUICKX(u,p,q,r) (-3*u[r][q][p]+7*u[r][q][I1(p)]-3*u[r][q][I2(p)]-u[r][q][I3(p)])/(8*dx)
-#define PQUICKY(u,p,q,r) (-3*u[r][q][p]+7*u[r][J1(q)][p]-3*u[r][J2(q)][p]-u[r][J3(q)][p])/(8*dy)
-#define PQUICKZ(u,p,q,r) (-3*u[r][q][p]+7*u[K1(r)][q][p]-3*u[K2(r)][q][p]-u[K3(r)][q][p])/(8*dz)
+#define PQUICKX(u,LLx,Lx,Cx,Rx,RRx,Cy,Cz) (-3*u[Cz][Cy][Cx]+7*u[Cz][Cy][Rx]-3*u[Cz][Cy][Lx]-u[Cz][Cy][RRx])*ddxx*0.125
+#define PQUICKY(u,Cx,LLy,Ly,Cy,Ry,RRy,Cz) (-3*u[Cz][Cy][Cx]+7*u[Cz][Ry][Cx]-3*u[Cz][Ly][Cx]-u[Cz][RRy][Cx])*ddyy*0.125
+#define PQUICKZ(u,Cx,Cy,LLz,Lz,Cz,Rz,RRz) (-3*u[Cz][Cy][Cx]+7*u[Rz][Cy][Cx]-3*u[Lz][Cy][Cx]-u[RRz][Cy][Cx])*ddzz*0.125
 //Negative advection Quick
-#define NQUICKX(u,p,q,r) (3*u[r][q][p]+3*u[r][q][I1(p)]-7*u[r][q][I2(p)]+u[r][q][I4(p)])/(8*dx)
-#define NQUICKY(u,p,q,r) (3*u[r][q][p]+3*u[r][J1(q)][p]-7*u[r][J2(q)][p]+u[r][J4(q)][p])/(8*dy)
-#define NQUICKZ(u,p,q,r) (3*u[r][q][p]+3*u[K1(r)][q][p]-7*u[K2(r)][q][p]+u[K4(r)][q][p])/(8*dz)
-#define QUICKX(c,a,p,q,r) c*( c < 0 ? PQUICKX(a,p,q,r) : NQUICKX(a,p,q,r))
-#define QUICKY(c,a,p,q,r) c*( c < 0 ? PQUICKY(a,p,q,r) : NQUICKY(a,p,q,r))
-#define QUICKZ(c,a,p,q,r) c*( c < 0 ? PQUICKZ(a,p,q,r) : NQUICKZ(a,p,q,r))
+#define NQUICKX(u,LLx,Lx,Cx,Rx,RRx,Cy,Cz) (3*u[Cz][Cy][Cx]+3*u[Cz][Cy][Rx]-7*u[Cz][Cy][Lx]+u[Cz][Cy][LLx])*ddxx*0.125
+#define NQUICKY(u,Cx,LLy,Ly,Cy,Ry,RRy,Cz) (3*u[Cz][Cy][Cx]+3*u[Cz][Ry][Cx]-7*u[Cz][Ly][Cx]+u[Cz][LLy][Cx])*ddyy*0.125
+#define NQUICKZ(u,Cx,Cy,LLz,Lz,Cz,Rz,RRz) (3*u[Cz][Cy][Cz]+3*u[Rz][Cy][Cx]-7*u[Lz][Cy][Cx]+u[LLz][Cy][Cx])*ddzz*0.125
+
+#define QUICKX(VELOCI,a,LLx,Lx,Cx,Rx,RRx,Cy,Cz) ( VELOCI < 0 ? PQUICKX(a,LLx,Lx,Cx,Rx,RRx,Cy,Cz) : NQUICKX(a,LLx,Lx,Cx,Rx,RRx,Cy,Cz))
+#define QUICKY(VELOCI,a,Cx,LLy,Ly,Cy,Ry,RRy,Cz) ( VELOCI < 0 ? PQUICKY(a,Cx,LLy,Ly,Cy,Ry,RRy,Cz) : NQUICKY(a,Cx,LLy,Ly,Cy,Ry,RRy,Cz))
+#define QUICKZ(VELOCI,a,Cx,Cy,LLz,Lz,Cz,Rz,RRz) ( VELOCI < 0 ? PQUICKZ(a,Cx,Cy,LLz,Lz,Cz,Rz,RRz) : NQUICKZ(a,Cx,Cy,LLz,Lz,Cz,Rz,RRz))
 
 #define DIFFUX(a,Lx,Cx,Rx,Cy,Cz) (a[Cz][Cy][Lx]-2*a[Cz][Cy][Cx]+a[Cz][Cy][Rx])*(ddxx2)
 #define DIFFUY(a,Cx,Ly,Cy,Ry,Cz) (a[Cz][Ly][Cx]-2*a[Cz][Cy][Cx]+a[Cz][Ry][Cx])*(ddyy2)
