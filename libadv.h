@@ -52,7 +52,7 @@ char FOLDER[256];
 
 
 #define DIFFU(a,L,C,R) (a[L]-2*a[C]+a[R])*ddxx2
-#define DIFFE(a,L,C,R) (a[L]-a[R])*ddxx*0.5
+#define DIFFE(a,L,C,R) (a[R]-a[L])*ddxx*0.5
 #define EULER(a,b,TERM,p) b[p] = a[p]+dt*TERM
 
 #define ABS(s) ((s) >0 ? (s) : -1*(s))
